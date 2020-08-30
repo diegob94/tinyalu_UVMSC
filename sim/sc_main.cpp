@@ -9,25 +9,29 @@
 #include "Vtinyalu.h"
 #include "Vtinyalu_tinyalu.h"
 
-SC_MODULE(tb){
-    Vtinyalu* dut;
+enum op_enum {
+    no_op,
+    add_op,
+    and_op,
+    xor_op,
+    mul_op,
+    rst_op
+};
 
-    sc_clock tb_clk;
-
+SC_MODULE(tinyalu_bfm){
+    // Clock
+    sc_in_clk clk{"clk"};
     // Input
-    sc_in_clk clk;
-    sc_signal<uint32_t> A;
-    sc_signal<uint32_t> B;
-    sc_signal<uint32_t> op;
-    sc_signal<bool> reset_n;
-    sc_signal<bool> start;
+    sc_signal<uint32_t> A{"A"};
+    sc_signal<uint32_t> B{"B"};
+    sc_signal<uint32_t> op{"op"};
+    sc_signal<bool> reset_n{"reset_n"};
+    sc_signal<bool> start{"start"};
     // Output
-    sc_signal<bool> done;
-    sc_signal<uint32_t> result;
+    sc_signal<bool> done{"done"};
+    sc_signal<uint32_t> result{"result"};
     // Internal
-    sc_signal<bool> done_reg1;
-
-    enum op_enum {no_op, add_op, and_op, xor_op, mul_op};
+    sc_in<bool> done_reg1{"done_reg1"};
 
     void stimulus () {
         reset_n = 0;
@@ -47,31 +51,50 @@ SC_MODULE(tb){
 
     void monitor_internal() {
         while(true){
-            done_reg1 = dut->tinyalu->get_done_reg1();
-            std::cout << "Monitor internal: " << done_reg1 << std::endl;
-            wait();
+            wait(done_reg1.value_changed_event());
+            std::cout << sc_time_stamp() << ":bfn done_reg1: " << done_reg1 << std::endl;
         }
     }
-
-    SC_CTOR(tb) : tb_clk ("clock", 10, SC_NS){
-        dut = new Vtinyalu("dut");
-        clk(tb_clk);
-        dut->clk(clk);
-        dut->reset_n(reset_n);
-        dut->A(A);
-        dut->B(B);
-        dut->op(op);
-        dut->start(start);
-        dut->done(done);
-        dut->result(result);
+    SC_CTOR(tinyalu_bfm){
         SC_THREAD(stimulus);
             sensitive << clk.pos();
         SC_THREAD(monitor_internal);
-            sensitive << clk.pos();
     }
 };
 
-tb* tb_p;
+SC_MODULE(top){
+    Vtinyalu* dut;
+    tinyalu_bfm* bfm;
+    sc_clock top_clk{"top_clk"};
+
+    sc_signal<bool> done_reg1;
+    void sample_internal(void) {
+        while(true){
+            done_reg1 = dut->tinyalu->get_done_reg1();
+            std::cout << sc_time_stamp() << ":top done_reg1: " << done_reg1 << std::endl;
+            wait();
+        }
+    }
+    
+    SC_CTOR(top) : top_clk ("top_clk", 10, SC_NS){
+        dut = new Vtinyalu("dut");
+        bfm = new tinyalu_bfm("bfm");
+        bfm->clk(top_clk);
+        dut->clk(bfm->clk);
+        dut->reset_n(bfm->reset_n);
+        dut->A(bfm->A);
+        dut->B(bfm->B);
+        dut->op(bfm->op);
+        dut->start(bfm->start);
+        dut->done(bfm->done);
+        dut->result(bfm->result);
+        bfm->done_reg1(done_reg1);
+        SC_THREAD(sample_internal);
+            sensitive << bfm->clk.pos();
+    }
+};
+
+top* top_p;
 VerilatedVcdSc* tfp = nullptr;
 
 void signal_handler(int signal) {
@@ -87,12 +110,12 @@ int sc_main(int argc, char* argv[]) {
     Verilated::commandArgs(argc, argv);
     Verilated::traceEverOn(true);
     sc_set_time_resolution(1, SC_PS);
-    tb_p = new tb("tb");
+    top_p = new top("top");
     const char* flag = Verilated::commandArgsPlusMatch("trace");
     if (flag && strcmp(flag, "+trace") == 0) {
         std::cout << "SC_MAIN: VCD open" << std::endl;
         tfp = new VerilatedVcdSc;
-        tb_p->dut->trace(tfp, 99);
+        top_p->dut->trace(tfp, 99);
         tfp->open("tb_v0.vcd");
     }
     std::signal(SIGABRT, signal_handler);

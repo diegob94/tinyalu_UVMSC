@@ -10,6 +10,8 @@ test -d work/sim_build || mkdir work/sim_build
 
 pushd work
 
+rm -rvf ./sim_build/sim
+
 cmake -GNinja -S ../scripts -B ./sim_build |& tee sim_compile.log
 cmake --build ./sim_build |& tee -a sim_compile.log
 ./sim_build/sim +trace |& tee sim_run.log
