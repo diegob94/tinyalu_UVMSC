@@ -1,5 +1,3 @@
-`include "vl_utils_h.v"
-
 module tinyalu (
     input [7:0] A, B,
     input [2:0] op,
@@ -44,8 +42,5 @@ always @(*)
         xor_op: result_next[7:0] = A ^ B;
         mul_op: result_next = A * B;
     endcase
-`ifdef verilator
-    `VL_PUBLIC_GETTER(done_reg1);
-`endif
 endmodule
 

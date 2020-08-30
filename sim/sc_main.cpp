@@ -7,7 +7,6 @@
 #include <verilated_vcd_sc.h>
 
 #include "Vtinyalu.h"
-#include "Vtinyalu_tinyalu.h"
 
 enum op_enum {
     no_op,
@@ -30,8 +29,6 @@ SC_MODULE(tinyalu_bfm){
     // Output
     sc_signal<bool> done{"done"};
     sc_signal<uint32_t> result{"result"};
-    // Internal
-    sc_in<bool> done_reg1{"done_reg1"};
 
     void stimulus () {
         reset_n = 0;
@@ -49,16 +46,9 @@ SC_MODULE(tinyalu_bfm){
         sc_stop();
     }
 
-    void monitor_internal() {
-        while(true){
-            wait(done_reg1.value_changed_event());
-            std::cout << sc_time_stamp() << ":bfn done_reg1: " << done_reg1 << std::endl;
-        }
-    }
     SC_CTOR(tinyalu_bfm){
         SC_THREAD(stimulus);
             sensitive << clk.pos();
-        SC_THREAD(monitor_internal);
     }
 };
 
@@ -66,15 +56,6 @@ SC_MODULE(top){
     Vtinyalu* dut;
     tinyalu_bfm* bfm;
     sc_clock top_clk{"top_clk"};
-
-    sc_signal<bool> done_reg1;
-    void sample_internal(void) {
-        while(true){
-            done_reg1 = dut->tinyalu->get_done_reg1();
-            std::cout << sc_time_stamp() << ":top done_reg1: " << done_reg1 << std::endl;
-            wait();
-        }
-    }
     
     SC_CTOR(top) : top_clk ("top_clk", 10, SC_NS){
         dut = new Vtinyalu("dut");
@@ -88,9 +69,6 @@ SC_MODULE(top){
         dut->start(bfm->start);
         dut->done(bfm->done);
         dut->result(bfm->result);
-        bfm->done_reg1(done_reg1);
-        SC_THREAD(sample_internal);
-            sensitive << bfm->clk.pos();
     }
 };
 
