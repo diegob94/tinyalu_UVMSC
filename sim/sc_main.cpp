@@ -1,4 +1,6 @@
 #include <csignal>
+#include <iomanip>
+#include <iostream>
 
 #include <systemc>
 #include <uvm>
@@ -8,7 +10,7 @@
 
 #include "Vtinyalu.h"
 
-enum op_enum {
+enum operation_t {
     no_op,
     add_op,
     and_op,
@@ -16,6 +18,24 @@ enum op_enum {
     mul_op,
     rst_op
 };
+
+const char * op_name(operation_t op){
+    switch(op){
+        case no_op:
+            return "no_op";
+        case add_op:
+            return "add_op"; 
+        case and_op:
+            return "and_op"; 
+        case xor_op:
+            return "xor_op"; 
+        case mul_op:
+            return "mul_op"; 
+        case rst_op:
+            return "rst_op"; 
+    }
+    return "unknown";
+}
 
 SC_MODULE(tinyalu_bfm){
     // Clock
@@ -30,25 +50,39 @@ SC_MODULE(tinyalu_bfm){
     sc_signal<bool> done{"done"};
     sc_signal<uint32_t> result{"result"};
 
-    void stimulus () {
+    void reset_op () {
         reset_n = 0;
-        wait(10);
+        wait(clk.negedge_event());
         reset_n = 1;
-        wait();
-        op_enum cmd_op = mul_op;
-        A = 2;
-        B = 4;
-        op = cmd_op;
         start = 1;
-        wait(done.posedge_event());
-        std::cout << "Result: " << result << std::endl;
-        wait(10);
-        sc_stop();
+    }
+    void send_op(uint8_t iA, uint8_t iB, operation_t iop, uint16_t &alu_result){
+        op = iop;
+        if (iop == rst_op) {
+            wait(clk.posedge_event());
+            reset_n = 0;
+            start = 0;
+            wait(clk.posedge_event());
+            reset_n = 1;
+        } else {
+            wait(clk.negedge_event());
+            A = iA;
+            B = iB;
+            start = 1;
+            if (iop == no_op) {
+                wait(clk.posedge_event());
+                start = 0;           
+            } else {
+                do
+                    wait(clk.negedge_event());
+                while (done == 0);
+                alu_result = result;
+                start = 0;
+            }
+        }
     }
 
     SC_CTOR(tinyalu_bfm){
-        SC_THREAD(stimulus);
-            sensitive << clk.pos();
     }
 };
 
@@ -57,6 +91,22 @@ SC_MODULE(top){
     tinyalu_bfm* bfm;
     sc_clock top_clk{"top_clk"};
     
+    void stimulus(){
+        test(4,3,add_op);
+        test(4,3,mul_op);
+        test(0,1,and_op);
+        sc_stop();
+    }
+
+    void test(uint8_t A, uint8_t B, operation_t op){
+        uint16_t result = 0;
+        std::cout << std::setfill(' ') << std::setw(20) << sc_time_stamp() << ": reset_op" << std::endl;
+        bfm->reset_op();
+        std::cout << std::setfill(' ') << std::setw(20) << sc_time_stamp() << ": send_op A=" << +A << " B=" << +B << " op=" << op_name(op) << std::endl;
+        bfm->send_op(A,B,op,result);
+        std::cout << std::setfill(' ') << std::setw(20) << sc_time_stamp() << ": result="<< result << std::endl;
+    }
+
     SC_CTOR(top) : top_clk ("top_clk", 10, SC_NS){
         dut = new Vtinyalu("dut");
         bfm = new tinyalu_bfm("bfm");
@@ -69,6 +119,7 @@ SC_MODULE(top){
         dut->start(bfm->start);
         dut->done(bfm->done);
         dut->result(bfm->result);
+        SC_THREAD(stimulus);
     }
 };
 
