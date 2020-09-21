@@ -1,3 +1,6 @@
+/*! \file tinyalu.h
+    \brief tinyalu utilities header
+*/
 #ifndef TINYALU_H
 #define TINYALU_H
 

@@ -1,3 +1,6 @@
+/*! \file top.cpp
+    \brief top sc_module
+*/
 #include "top.h"
 
 void top::stimulus(void){

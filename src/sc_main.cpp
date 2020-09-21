@@ -1,5 +1,5 @@
 /*! \file sc_main.cpp
-    \brief SystemC entry point.
+    \brief SystemC entry point
 */
 #include <csignal>
 #include <iomanip>

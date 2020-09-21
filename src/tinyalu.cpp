@@ -1,3 +1,6 @@
+/*! \file tinyalu.cpp
+    \brief tinyalu utilities
+*/
 #include "tinyalu.h"
 
 const char * op_name(operation_t op){

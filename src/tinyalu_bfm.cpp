@@ -1,3 +1,6 @@
+/*! \file tinyalu_bfm.cpp
+    \brief tinyalu bus functional model
+*/
 #include "tinyalu_bfm.h"
 
 void tinyalu_bfm::reset_op(void) {

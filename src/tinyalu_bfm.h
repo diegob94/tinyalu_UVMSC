@@ -1,3 +1,6 @@
+/*! \file tinyalu_bfm.h
+    \brief tinyalu bus functional model header
+*/
 #ifndef TINYALU_BFM_H
 #define TINYALU_BFM_H
 
@@ -5,6 +8,8 @@
 #include "tinyalu.h"
 
 using namespace sc_core;
+
+//! \todo bus protocol assertions
 
 SC_MODULE(tinyalu_bfm){
     // Clock

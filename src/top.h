@@ -1,3 +1,6 @@
+/*! \file top.h
+    \brief top sc_module header
+*/
 #ifndef TOP_H
 #define TOP_H
 
