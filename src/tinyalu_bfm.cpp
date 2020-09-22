@@ -12,9 +12,9 @@ void tinyalu_bfm::reset_op(void) {
 
 tinyalu_bfm::tinyalu_bfm(sc_module_name) {}
 
-void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, operation_t iop, uint16_t &alu_result){
-    op = iop;
-    if (iop == rst_op) {
+void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result){
+    op = op_value(iop);
+    if (iop == op_t::rst_op) {
         wait(clk.posedge_event());
         reset_n = 0;
         start = 0;
@@ -25,7 +25,7 @@ void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, operation_t iop, uint16_t &alu
         A = iA;
         B = iB;
         start = 1;
-        if (iop == no_op) {
+        if (iop == op_t::no_op) {
             wait(clk.posedge_event());
             start = 0;           
         } else {

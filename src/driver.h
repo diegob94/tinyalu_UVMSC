@@ -6,15 +6,18 @@
 
 #include <uvm>
 
+#include "tinyalu_bfm.h"
+
 using namespace uvm;
 
 template <typename REQ = uvm_sequence_item, typename RSP = REQ>
 class driver : public uvm_driver<REQ,RSP>{
 public:
     driver(uvm_component_name);
-    UVM_COMPONENT_PARAM_UTILS(driver<REQ,RSP>);
+    void build_phase(uvm_phase&);
     void run_phase(uvm_phase&);
 private:
+    tinyalu_bfm* bfm;
     int data_array[512];
 };
 

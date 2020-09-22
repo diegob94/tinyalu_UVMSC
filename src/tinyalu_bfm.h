@@ -26,7 +26,7 @@ SC_MODULE(tinyalu_bfm){
 
     SC_CTOR(tinyalu_bfm);
     void reset_op(void);
-    void send_op(uint8_t, uint8_t, operation_t, uint16_t&);
+    void send_op(uint8_t, uint8_t, op_t, uint16_t&);
 };
 
 #endif // TINYALU_BFM_H

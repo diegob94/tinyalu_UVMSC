@@ -3,20 +3,23 @@
 */
 #include "tinyalu.h"
 
-const char * op_name(operation_t op){
+const std::string op_name(op_t op){
     switch(op){
-        case no_op:
+        case op_t::no_op:
             return "no_op";
-        case add_op:
+        case op_t::add_op:
             return "add_op"; 
-        case and_op:
+        case op_t::and_op:
             return "and_op"; 
-        case xor_op:
+        case op_t::xor_op:
             return "xor_op"; 
-        case mul_op:
+        case op_t::mul_op:
             return "mul_op"; 
-        case rst_op:
+        case op_t::rst_op:
             return "rst_op"; 
     }
     return "unknown";
+}
+const uint32_t op_value(op_t op){
+    return static_cast<typename std::underlying_type<op_t>::type>(op);
 }
