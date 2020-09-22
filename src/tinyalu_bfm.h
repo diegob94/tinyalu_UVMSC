@@ -7,22 +7,20 @@
 #include <systemc>
 #include "tinyalu.h"
 
-using namespace sc_core;
-
 //! \todo bus protocol assertions
 
 SC_MODULE(tinyalu_bfm){
     // Clock
-    sc_in_clk clk{"clk"};
+    sc_core::sc_in_clk clk{"clk"};
     // Input
-    sc_signal<uint32_t> A{"A"};
-    sc_signal<uint32_t> B{"B"};
-    sc_signal<uint32_t> op{"op"};
-    sc_signal<bool> reset_n{"reset_n"};
-    sc_signal<bool> start{"start"};
+    sc_core::sc_signal<uint32_t> A{"A"};
+    sc_core::sc_signal<uint32_t> B{"B"};
+    sc_core::sc_signal<uint32_t> op{"op"};
+    sc_core::sc_signal<bool> reset_n{"reset_n"};
+    sc_core::sc_signal<bool> start{"start"};
     // Output
-    sc_signal<bool> done{"done"};
-    sc_signal<uint32_t> result{"result"};
+    sc_core::sc_signal<bool> done{"done"};
+    sc_core::sc_signal<uint32_t> result{"result"};
 
     SC_CTOR(tinyalu_bfm);
     void reset_op(void);

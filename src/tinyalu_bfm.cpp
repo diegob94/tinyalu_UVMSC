@@ -10,7 +10,7 @@ void tinyalu_bfm::reset_op(void) {
     start = 1;
 }
 
-tinyalu_bfm::tinyalu_bfm(sc_module_name) {}
+tinyalu_bfm::tinyalu_bfm(sc_core::sc_module_name name) : sc_module(name) {}
 
 void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result){
     op = op_value(iop);

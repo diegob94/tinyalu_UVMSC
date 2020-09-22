@@ -1,17 +1,17 @@
 #include "driver.h"
 
 template <typename REQ, typename RSP>
-driver<REQ,RSP>::driver(uvm_component_name name) : uvm_driver<REQ,RSP>( name ) {}
+driver<REQ,RSP>::driver(uvm::uvm_component_name name) : uvm::uvm_driver<REQ,RSP>( name ) {}
 
 template <typename REQ, typename RSP>
-void driver<REQ,RSP>::build_phase(uvm_phase& phase){
-    if(uvm_config_db<tinyalu_bfm*>::get(NULL,"*","bfm",bfm)){
+void driver<REQ,RSP>::build_phase(uvm::uvm_phase& phase){
+    if(uvm::uvm_config_db<tinyalu_bfm*>::get(NULL,"*","bfm",bfm)){
         UVM_FATAL("DRIVER","Failed to get bfm");
     }
 }
 
 template <typename REQ, typename RSP>
-void driver<REQ,RSP>::run_phase(uvm_phase& phase){
+void driver<REQ,RSP>::run_phase(uvm::uvm_phase& phase){
     REQ req;
     RSP rsp;
     for(;;) {
