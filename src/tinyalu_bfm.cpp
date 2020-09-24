@@ -3,17 +3,10 @@
 */
 #include "tinyalu_bfm.h"
 
-void tinyalu_bfm::reset_op(void) {
-    reset_n = 0;
-    wait(clk.negedge_event());
-    reset_n = 1;
-    start = 1;
-}
-
 tinyalu_bfm::tinyalu_bfm(sc_core::sc_module_name name) : sc_module(name) {}
 
 void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result){
-    op = op_value(iop);
+    op = scv_get_extensions(iop).get_integer();
     if (iop == op_t::rst_op) {
         wait(clk.posedge_event());
         reset_n = 0;
@@ -36,4 +29,27 @@ void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result
             start = 0;
         }
     }
+}
+
+void tinyalu_bfm::reset_op(void) {
+    reset_n = 0;
+    wait(clk.negedge_event());
+    reset_n = 1;
+    start = 1;
+}
+
+void tinyalu_bfm::op_monitor_thread(void){
+//    bool in_command = 0;
+//    if(start) {
+//        if(!in_command){
+//            command_monitor_p->write_to_monitor(A,B);
+//        }
+//    }
+}
+
+void tinyalu_bfm::rst_monitor_thread(void){
+}
+
+void tinyalu_bfm::result_monitor_thread(void){
+
 }

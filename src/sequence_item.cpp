@@ -29,7 +29,7 @@ std::string sequence_item::convert2string(void){
     std::ostringstream str;
     str << "A: 0x" << std::hex << std::setw(2) << std::setfill('0') << A;
     str << "B: 0x" << std::hex << std::setw(2) << std::setfill('0') << B;
-    str << "op: " << op_name(op);
+    str << "op: " << scv_get_extensions(op).get_string();
     str << "result: 0x" << std::hex << std::setw(2) << std::setfill('0') << result;
     return str.str();
 }

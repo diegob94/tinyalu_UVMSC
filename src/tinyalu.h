@@ -5,6 +5,7 @@
 #define TINYALU_H
 
 #include <string>
+#include <scv.h>
 
 enum class op_t {
     no_op,
@@ -15,8 +16,16 @@ enum class op_t {
     rst_op
 };
 
-//! \todo create enum class for encapsulation?
-const std::string op_name(op_t);
-const uint32_t op_value(op_t);
+SCV_ENUM_EXTENSIONS(op_t) {
+public:
+    SCV_ENUM_CTOR(op_t){
+        SCV_ENUM(op_t::no_op);
+        SCV_ENUM(op_t::add_op);
+        SCV_ENUM(op_t::and_op);
+        SCV_ENUM(op_t::xor_op);
+        SCV_ENUM(op_t::mul_op);
+        SCV_ENUM(op_t::rst_op);
+    }
+};
 
 #endif // TINYALU_H

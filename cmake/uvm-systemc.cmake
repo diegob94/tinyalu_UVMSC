@@ -1,9 +1,6 @@
+# \todo add include path
 
-if(NOT DEFINED ENV{SYSTEMC_LIBDIR})
-    message(FATAL_ERROR "SYSTEMC_LIBDIR environment variable not defined")
-endif()
-set(SYSTEMC_LIBDIR $ENV{SYSTEMC_LIBDIR})
-message(STATUS "SYSTEMC_LIBDIR=${SYSTEMC_LIBDIR}")
-find_library(LIB_UVM_SYSTEMC uvm-systemc ${SYSTEMC_LIBDIR})
+find_library(LIB_UVM_SYSTEMC uvm-systemc ${UVM_SYSTEMC_LIBDIR})
 message(STATUS "LIB_UVM_SYSTEMC=${LIB_UVM_SYSTEMC}")
 link_libraries(${LIB_UVM_SYSTEMC})
+include_directories(${UVM_SYSTEMC_INCLUDE})
