@@ -1,2 +1,2 @@
-# Verilator_UVM_SystemC_example
-Verilator+UVM_SystemC example
+# Tinyalu_UVMSC
+UVM SystemC + Verilator example
