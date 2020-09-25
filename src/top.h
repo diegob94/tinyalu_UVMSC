@@ -7,6 +7,7 @@
 #include <systemc>
 #include "Vtinyalu.h"
 #include "tinyalu_bfm.h"
+#include "env.h"
 
 SC_MODULE(top){
     Vtinyalu* dut;
