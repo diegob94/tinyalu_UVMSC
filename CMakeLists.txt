@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
 
 project(tinyalu)
+
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
-set(RTL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rtl)
-set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+set(RTL_DIR ${PROJECT_SOURCE_DIR}/rtl)
+set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
 set(RTL_FILES ${RTL_DIR}/tinyalu.v)
 file(GLOB_RECURSE SYSTEMC_FILES CONFIGURE_DEPENDS ${SRC_DIR}/*.cpp)
@@ -38,12 +41,12 @@ message(STATUS "LIB_UVM_SYSTEMC=${LIB_UVM_SYSTEMC}")
 target_link_libraries(sim PRIVATE ${LIB_UVM_SYSTEMC})
 target_include_directories(sim PRIVATE ${UVM_SYSTEMC_INCLUDE})
 
-set(SYSTEMC_VERIF_LIBDIR ${SYSTEMC_LIBDIR})
-set(SYSTEMC_VERIF_INCLUDE ${SYSTEMC_INCLUDE})
-find_library(LIB_SYSTEMC_VERIF scv ${SYSTEMC_VERIF_LIBDIR})
-message(STATUS "LIB_SYSTEMC_VERIF=${LIB_SYSTEMC_VERIF}")
-target_link_libraries(sim PRIVATE ${LIB_SYSTEMC_VERIF})
-target_include_directories(sim PRIVATE ${SYSTEMC_VERIF_INCLUDE})
+#set(SYSTEMC_VERIF_LIBDIR ${SYSTEMC_LIBDIR})
+#set(SYSTEMC_VERIF_INCLUDE ${SYSTEMC_INCLUDE})
+#find_library(LIB_SYSTEMC_VERIF scv ${SYSTEMC_VERIF_LIBDIR})
+#message(STATUS "LIB_SYSTEMC_VERIF=${LIB_SYSTEMC_VERIF}")
+#target_link_libraries(sim PRIVATE ${LIB_SYSTEMC_VERIF})
+#target_include_directories(sim PRIVATE ${SYSTEMC_VERIF_INCLUDE})
 
 # SystemC dependencies
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -52,10 +55,9 @@ find_package(Threads REQUIRED)
 #set(CMAKE_PREFIX_PATH /home/diegob/eda)
 find_package(SystemCLanguage CONFIG REQUIRED)
 
-find_package(fc4sc CONFIG REQUIRED)
-target_link_libraries(sim PRIVATE fc4sc)
+target_include_directories(sim PRIVATE ${SYSTEMC_INCLUDE}/fc4sysc)
 
-verilate(sim TRACE SYSTEMC SOURCES ${RTL_FILES} INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/verilog VERILATOR_ARGS -Wno-fatal --timescale 1ns/1ps)
+verilate(sim TRACE SYSTEMC SOURCES ${RTL_FILES} INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/verilog VERILATOR_ARGS -Wno-fatal --timescale 1ns/1ps)
 verilator_link_systemc(sim)
 
 option(BUILD_DOC "Build documentation" OFF)
@@ -63,16 +65,19 @@ option(BUILD_DOC "Build documentation" OFF)
 if (BUILD_DOC)
     find_package(Doxygen)
     if (DOXYGEN_FOUND)
-        set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
-        set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+        set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/docs/Doxyfile.in)
+        set(DOXYGEN_OUT ${PROJECT_BINARY_DIR}/Doxyfile)
         configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
         message("Doxygen build started")
         add_custom_target( doc_doxygen ALL
             COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_FILE}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
             COMMENT "Generating API documentation with Doxygen"
             VERBATIM )
     else (DOXYGEN_FOUND)
       message("Doxygen need to be installed to generate the doxygen documentation")
     endif (DOXYGEN_FOUND)
 endif (BUILD_DOC)
+
+
+message(STATUS "SystemC_CXX_STANDARD=${SystemC_CXX_STANDARD}")

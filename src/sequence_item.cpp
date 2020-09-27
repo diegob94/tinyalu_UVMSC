@@ -1,7 +1,9 @@
 
 #include "sequence_item.h"
 
-sequence_item::sequence_item(const std::string& name = "") : uvm::uvm_sequence_item(name){}
+sequence_item::sequence_item(const std::string& name = "") : 
+  uvm::uvm_sequence_item(name),
+  op(op_t::no_op) {}
 
 void sequence_item::do_copy(const uvm::uvm_object& rhs){
     const sequence_item* _rhs = dynamic_cast<const sequence_item*>(&rhs);
@@ -29,7 +31,7 @@ std::string sequence_item::convert2string(void){
     std::ostringstream str;
     str << "A: 0x" << std::hex << std::setw(2) << std::setfill('0') << A;
     str << "B: 0x" << std::hex << std::setw(2) << std::setfill('0') << B;
-    str << "op: " << scv_get_extensions(op).get_string();
+    str << "op: " << op._to_string();
     str << "result: 0x" << std::hex << std::setw(2) << std::setfill('0') << result;
     return str.str();
 }

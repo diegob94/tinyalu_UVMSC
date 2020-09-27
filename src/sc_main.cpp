@@ -47,16 +47,4 @@ int sc_main(int argc, char* argv[]) {
 }
 
 
-//#int sc_main(int argc, char* argv[]) {
-//#    sc_start();
-//#    ins_t inst = ins_t::SUB;
-//#    std::cout<< "your instruction is: " << +scv_get_extensions(inst).get_integer() <<std::endl;
-//#    std::cout<< "your instruction is: " << scv_get_extensions(inst).get_string() <<std::endl;
-//#    scv_get_extensions(inst).assign(0);
-//#    std::cout<< "now your instruction is: " << +scv_get_extensions(inst).get_integer() <<std::endl;
-//#    std::cout<< "now your instruction is: " << scv_get_extensions(inst).get_string() <<std::endl;
-//#    sc_stop();
-//#    return 0;
-//#}
-
 

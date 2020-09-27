@@ -6,8 +6,7 @@
 tinyalu_bfm::tinyalu_bfm(sc_core::sc_module_name name) : sc_module(name) {}
 
 void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result){
-    op = scv_get_extensions(iop).get_integer();
-    if (iop == op_t::rst_op) {
+    if (iop == +op_t::rst_op) {
         wait(clk.posedge_event());
         reset_n = 0;
         start = 0;
@@ -18,7 +17,7 @@ void tinyalu_bfm::send_op(uint8_t iA, uint8_t iB, op_t iop, uint16_t &alu_result
         A = iA;
         B = iB;
         start = 1;
-        if (iop == op_t::no_op) {
+        if (iop == +op_t::no_op) {
             wait(clk.posedge_event());
             start = 0;           
         } else {
