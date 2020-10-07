@@ -11,10 +11,10 @@
 
 class result_transaction : public uvm::uvm_transaction{
 public:
-    result_transaction(const std::string&);
+    result_transaction(const std::string& name = "");
     void do_copy(const uvm::uvm_object&);
     bool do_compare(const uvm::uvm_object&, const uvm::uvm_comparer*);
-    std::string convert2string(void);
+    std::string convert2string(void) const;
 public:
     uint16_t result;
 };

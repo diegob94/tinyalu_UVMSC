@@ -13,11 +13,11 @@
 
 class sequence_item : public uvm::uvm_sequence_item{
 public:
-    sequence_item(const std::string&);
+    sequence_item(const std::string& name = "");
     UVM_OBJECT_UTILS(sequence_item);
     void do_copy(const uvm::uvm_object&);
     bool do_compare(const uvm::uvm_object&, const uvm::uvm_comparer*);
-    std::string convert2string(void);
+    std::string convert2string(void) const;
 public:
     uint8_t A;
     uint8_t B;
