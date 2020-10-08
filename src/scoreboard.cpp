@@ -13,7 +13,7 @@ void scoreboard::predict_result(result_transaction& predicted, sequence_item& cm
   }
 }
 
-void scoreboard::write(const sequence_item& t){
+void scoreboard::write(const result_transaction& t){
   std::string data_str;
   sequence_item cmd;
   result_transaction predicted;

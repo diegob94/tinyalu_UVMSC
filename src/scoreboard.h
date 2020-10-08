@@ -7,12 +7,12 @@
 #include "sequence_item.h"
 
 class scoreboard : public uvm::uvm_subscriber<result_transaction> {
-  private:
-    tlm::tlm_analysis_fifo<sequence_item> cmd_f;
   public:
+    UVM_COMPONENT_UTILS(scoreboard);
     scoreboard(uvm::uvm_component_name);
     void predict_result(result_transaction&, sequence_item&);
-    void write(const sequence_item&);
+    void write(const result_transaction&);
+    tlm::tlm_analysis_fifo<sequence_item> cmd_f;
 };
 
 #endif // SCOREBOARD_H

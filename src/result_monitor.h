@@ -13,9 +13,9 @@ public:
     void build_phase(uvm::uvm_phase&);
     void connect_phase(uvm::uvm_phase&);
     void write_to_monitor(uint16_t result);
+    uvm::uvm_analysis_port<result_transaction> ap;
 private:
     tinyalu_bfm* bfm;
-    uvm::uvm_analysis_port<result_transaction> ap;
 };
 
 #endif // RESULT_MONITOR_H

@@ -11,7 +11,7 @@
 
 #include "tinyalu.h"
 
-class sequence_item : public uvm::uvm_sequence_item{
+class sequence_item : public uvm::uvm_sequence_item {
 public:
     sequence_item(const std::string& name = "");
     UVM_OBJECT_UTILS(sequence_item);
