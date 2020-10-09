@@ -9,7 +9,7 @@ driver::driver(uvm::uvm_component_name name)
 //template <typename REQ, typename RSP>
 //void driver<REQ,RSP>::build_phase(uvm::uvm_phase& phase){
 void driver::build_phase(uvm::uvm_phase& phase){
-    if(uvm::uvm_config_db<tinyalu_bfm*>::get(NULL,"*","bfm",bfm)){
+    if(!uvm::uvm_config_db<tinyalu_bfm*>::get(NULL,"*","bfm",bfm)){
         UVM_FATAL("DRIVER","Failed to get bfm");
     }
 }

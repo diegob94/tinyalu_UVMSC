@@ -38,7 +38,10 @@ int sc_main(int argc, char* argv[]) {
         tfp->open("tb_v0.vcd");
     }
     std::signal(SIGABRT, signal_handler);
-    sc_start();
+  uvm::uvm_default_printer = uvm::uvm_default_table_printer;
+  uvm::uvm_root::get()->enable_print_topology();
+  uvm::uvm_config_db<tinyalu_bfm*>::set(NULL,"*","bfm",top_p->bfm);
+  uvm::run_test("fibonacci_test");
     if (tfp) {
         std::cout << "SC_MAIN: VCD close" << std::endl;
         tfp->close();

@@ -11,10 +11,9 @@
 
 SC_MODULE(top){
     Vtinyalu* dut;
-    tinyalu_bfm* bfm;
     sc_clock top_clk{"top_clk"};
 public:
-    void stimulus(void);
+    tinyalu_bfm* bfm;
     SC_CTOR(top);
 };
 
