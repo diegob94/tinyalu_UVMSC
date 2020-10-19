@@ -38,6 +38,7 @@ int sc_main(int argc, char* argv[]) {
         tfp->open("tb_v0.vcd");
     }
     std::signal(SIGABRT, signal_handler);
+  uvm::uvm_set_verbosity_level(uvm::UVM_FULL);
   uvm::uvm_default_printer = uvm::uvm_default_table_printer;
   uvm::uvm_root::get()->enable_print_topology();
   uvm::uvm_config_db<tinyalu_bfm*>::set(NULL,"*","bfm",top_p->bfm);

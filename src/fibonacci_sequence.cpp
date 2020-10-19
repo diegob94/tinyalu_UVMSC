@@ -12,8 +12,8 @@ void fibonacci_sequence::body(void) {
   start_item(command);
   command->op = op_t::rst_op;
   finish_item(command);
-  UVM_INFO("FIBONACCI", " Fib(01) = 00", uvm::UVM_MEDIUM);
-  UVM_INFO("FIBONACCI", " Fib(02) = 01", uvm::UVM_MEDIUM);
+  UVM_INFO("FIBONACCI", "Fib(01) = 00", uvm::UVM_MEDIUM);
+  UVM_INFO("FIBONACCI", "Fib(02) = 01", uvm::UVM_MEDIUM);
   for(int ff = 3; ff<=14; ff++) {
     start_item(command);
     command->A = n_minus_2;
@@ -23,7 +23,7 @@ void fibonacci_sequence::body(void) {
     n_minus_2 = n_minus_1;
     n_minus_1 = command->result;
     std::ostringstream msg;
-    msg << "Fib(" << ff << " = " << n_minus_1;
+    msg << "Fib(" << ff << ") = " << +n_minus_1;
     UVM_INFO("FIBONACCI", msg.str(), uvm::UVM_MEDIUM);
   }
 }

@@ -21,11 +21,10 @@ void driver::run_phase(uvm::uvm_phase& phase){
     //RSP rsp;
     sequence_item req;
 //    sequence_item rsp;
-    uint16_t result;
     for(;;) {
         this->seq_item_port->get_next_item(req); // or alternative this->seq_item_port->peek(req)
-        bfm->send_op(req.A, req.B, req.op, result);
-        req.result = result;
+        bfm->send_op(req.A, req.B, req.op, req.result);
+        UVM_INFO("DRIVER",req.convert2string(),uvm::UVM_FULL);
         this->seq_item_port->item_done();       // or alternative this->seq_item_port->get(tmp) to flush item from fifo
         //this->seq_item_port->put_response(rsp); // or alternative: this->seq_item_port->put(rsp)
     }

@@ -19,7 +19,7 @@ void scoreboard::write(const result_transaction& t){
   result_transaction predicted;
   do
     if(!cmd_f.nb_get(cmd))
-      UVM_FATAL("SELF CHECKER","Missing command in self checker");
+      UVM_FATAL("SELF_CHECKER","Missing command in self checker");
   while((cmd.op == +op_t::no_op) || (cmd.op == +op_t::rst_op));
   predict_result(predicted,cmd);
   data_str = cmd.convert2string() +
@@ -28,7 +28,7 @@ void scoreboard::write(const result_transaction& t){
     "/Predicted " +
     predicted.convert2string();
   if (!predicted.compare(t))
-    UVM_ERROR("SELF CHECKER", "FAIL: " + data_str);
+    UVM_ERROR("SELF_CHECKER", "FAIL: " + data_str);
   else
-    UVM_INFO("SELF CHECKER", "PASS: " + data_str, uvm::UVM_HIGH);
+    UVM_INFO("SELF_CHECKER", "PASS: " + data_str, uvm::UVM_HIGH);
 }

@@ -12,6 +12,7 @@
 class result_transaction : public uvm::uvm_transaction{
 public:
     result_transaction(const std::string& name = "");
+    UVM_OBJECT_UTILS(result_transaction);
     void do_copy(const uvm::uvm_object&);
     bool do_compare(const uvm::uvm_object&, const uvm::uvm_comparer*);
     std::string convert2string(void) const;

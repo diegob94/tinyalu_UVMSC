@@ -12,15 +12,13 @@ public:
   coverage(uvm::uvm_component_name);
   void write(const sequence_item&);
 private:
-  uint8_t A;
-  uint8_t B;
-  op_t op_set;
   class op_cov : public covergroup {
-    private:
-      coverage* cov;
     public:
-      CG_CONS(op_cov, coverage* cov=NULL) {};
-      COVERPOINT(uint32_t, op_set_cvp, cov->op_set._to_integral()){
+      op_t op_set;
+      CG_CONS(op_cov),
+        op_set(op_t::no_op) 
+        {};
+      COVERPOINT(uint32_t, op_set_cvp, op_set._to_integral()){
           bin<uint32_t>("single_cycle", interval(op_t::add_op,op_t::mul_op), op_t::no_op),
           bin<uint32_t>("multi_cycle", op_t::mul_op)
       };
@@ -38,19 +36,24 @@ private:
           //bins rstmulrstim = (rst_op => mul_op [-> 2] => rst_op);
   };
   class zeros_or_ones_on_ops : public covergroup {
-    private:
-      coverage* cov;
     public:
-      CG_CONS(zeros_or_ones_on_ops, coverage* cov=NULL) {};
-      COVERPOINT(uint32_t, all_ops, cov->op_set._to_integral()){
+      uint8_t A;
+      uint8_t B;
+      op_t op_set;
+      CG_CONS(zeros_or_ones_on_ops),
+        A(0),
+        B(0), 
+        op_set(op_t::no_op) 
+        {};
+      COVERPOINT(uint32_t, all_ops, op_set._to_integral()){
           ignore_bin<uint32_t>("null_ops", op_t::rst_op, op_t::no_op)
       };
-      COVERPOINT(uint8_t, a_leg, cov->A){
+      COVERPOINT(uint8_t, a_leg, A){
           bin<uint8_t>("zeros", 0x00),
           bin<uint8_t>("others", interval(1,0xFE)),
           bin<uint8_t>("ones", 0xFF)
       };
-      COVERPOINT(uint8_t, b_leg, cov->B){
+      COVERPOINT(uint8_t, b_leg, B){
           bin<uint8_t>("zeros", 0x00),
           bin<uint8_t>("others", interval(1,0xFE)),
           bin<uint8_t>("ones", 0xFF)
