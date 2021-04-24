@@ -10,4 +10,5 @@ void tinyalu_base_test::build_phase(uvm::uvm_phase&) {
 
 void tinyalu_base_test::end_of_elaboration_phase(uvm::uvm_phase&) {
   sequencer_p = env_p->sequencer_p;
+  uvm::print_topology();
 }
