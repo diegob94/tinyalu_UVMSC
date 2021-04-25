@@ -1,7 +1,7 @@
 /*! \file sc_main.cpp
     \brief SystemC entry point
 */
-#include <csignal>
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 
@@ -16,13 +16,12 @@
 top* top_p;
 VerilatedVcdSc* tfp = nullptr;
 
-void signal_handler(int signal) {
-  if (signal == SIGABRT) {
-    if (tfp) {
-      tfp->flush();
-    }
+void exit_handler() {
+  std::cout << "SC_MAIN: flushing VCD buffer" << std::endl;
+  if (tfp) {
+    tfp->flush();
+    tfp->close();
   }
-  std::_Exit(EXIT_FAILURE);
 }
 
 int sc_main(int argc, char* argv[]) {
@@ -36,17 +35,12 @@ int sc_main(int argc, char* argv[]) {
     tfp = new VerilatedVcdSc;
     top_p->dut->trace(tfp, 99);
     tfp->open("tb_v0.vcd");
+    std::atexit(exit_handler);
   }
-  std::signal(SIGABRT, signal_handler);
   uvm::uvm_set_verbosity_level(uvm::UVM_FULL);
   uvm::uvm_config_db<tinyalu_bfm*>::set(NULL,"*","bfm",top_p->bfm);
   uvm::run_test("fibonacci_test");
-  if (tfp) {
-    std::cout << "SC_MAIN: VCD close" << std::endl;
-    tfp->close();
-  }
   return 0;
 }
-
 
 
